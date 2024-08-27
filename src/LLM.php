@@ -16,7 +16,7 @@ use OpenAI\Contracts\ClientContract;
 
 final class LLM implements LLMInterface
 {
-    protected array $defaultOptions = [
+    private array $defaultOptions = [
         Option::Temperature->value => 0.8,
         Option::MaxTokens->value => 120,
         Option::TopP->value => null,
@@ -27,7 +27,7 @@ final class LLM implements LLMInterface
         Option::FunctionCall->value => null,
         Option::Functions->value => null,
         Option::User->value => null,
-        Option::Model->value => 'gpt-4o-mini',
+        Option::Model->value => OpenAIModel::Gpt4oMini->value,
     ];
 
     public function __construct(

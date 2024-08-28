@@ -1,6 +1,7 @@
 {
   "name": "llm-agents/openai-client",
   "description": "OpenAI API client for LLM Agents",
+  "license": "MIT",
   "require": {
     "php": "^8.3",
     "openai-php/client": "^0.10.1",

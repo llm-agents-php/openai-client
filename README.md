@@ -45,7 +45,7 @@ The package uses your OpenAI API key and organization (if you have one) to authe
 file:
 
 ```
-OPENAI_API_KEY=your_api_key_here
+OPENAI_KEY=your_api_key_here
 ```
 
 ## Contributing 

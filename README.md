@@ -1,5 +1,9 @@
 # LLM Agents OpenAI Client
 
+[![PHP](https://img.shields.io/packagist/php-v/llm-agents/openai-client.svg?style=flat-square)](https://packagist.org/packages/llm-agents/openai-client)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/llm-agents/openai-client.svg?style=flat-square)](https://packagist.org/packages/llm-agents/openai-client)
+[![Total Downloads](https://img.shields.io/packagist/dt/llm-agents/openai-client.svg?style=flat-square)](https://packagist.org/packages/llm-agents/openai-client)
+
 This package is your go-to solution for integrating OpenAI's powerful API into your LLM Agents projects.
 
 ## What's in the box? 

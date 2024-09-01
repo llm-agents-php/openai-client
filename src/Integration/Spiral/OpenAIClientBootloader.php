@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LLM\Agents\OpenAI\Client\Integration\Spiral;
 
-use Illuminate\Contracts\Foundation\Application;
 use LLM\Agents\LLM\LLMInterface;
 use LLM\Agents\OpenAI\Client\LLM;
 use LLM\Agents\OpenAI\Client\Parsers\ChatResponseParser;
@@ -19,14 +18,13 @@ final class OpenAIClientBootloader extends Bootloader
         return [
             LLMInterface::class => LLM::class,
 
-            StreamResponseParser::class => static function (Application $app): StreamResponseParser {
+            StreamResponseParser::class => static function (
+                ChatResponseParser $chatResponseParser,
+            ): StreamResponseParser {
                 $parser = new StreamResponseParser();
 
                 // Register parsers here
-                $parser->registerParser(
-                    CreateStreamedResponse::class,
-                    $app->make(ChatResponseParser::class)
-                );
+                $parser->registerParser(CreateStreamedResponse::class, $chatResponseParser);
 
                 return $parser;
             },

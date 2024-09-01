@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LLM\Agents\OpenAI\Client\Integration\Laravel;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use LLM\Agents\LLM\LLMInterface;
 use LLM\Agents\OpenAI\Client\LLM;
@@ -22,13 +23,14 @@ final class OpenAIClientServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             StreamResponseParser::class,
-            static function (
-                ChatResponseParser $chatResponseParser,
-            ): StreamResponseParser {
+            static function (Application $app): StreamResponseParser {
                 $parser = new StreamResponseParser();
 
                 // Register parsers here
-                $parser->registerParser(CreateStreamedResponse::class, $chatResponseParser);
+                $parser->registerParser(
+                    CreateStreamedResponse::class,
+                    $app->make(ChatResponseParser::class),
+                );
 
                 return $parser;
             },

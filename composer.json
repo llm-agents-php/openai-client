@@ -6,11 +6,12 @@
     "php": "^8.3",
     "openai-php/client": "^0.10.1",
     "llm-agents/agents": "^1.0",
-    "spiral/boot": "^3.13",
     "guzzlehttp/guzzle": "^7.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^11.3"
+    "phpunit/phpunit": "^11.3",
+    "spiral/boot": "^3.13",
+    "illuminate/support": "^11.0"
   },
   "autoload": {
     "psr-4": {
@@ -24,6 +25,13 @@
   },
   "config": {
     "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "LLM\\Agents\\OpenAI\\Client\\Integration\\Laravel\\OpenAIClientServiceProvider"
+      ]
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true

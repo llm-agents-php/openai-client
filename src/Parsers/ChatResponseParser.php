@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace LLM\Agents\OpenAI\Client\Parsers;
 
 use LLM\Agents\OpenAI\Client\Event\MessageChunk;
+use LLM\Agents\OpenAI\Client\Exception\LimitExceededException;
+use LLM\Agents\OpenAI\Client\Exception\RateLimitException;
+use LLM\Agents\OpenAI\Client\Exception\TimeoutException;
 use LLM\Agents\OpenAI\Client\StreamChunkCallbackInterface;
 use LLM\Agents\LLM\Response\FinishReason;
 use LLM\Agents\LLM\Response\Response;
@@ -21,6 +24,11 @@ final readonly class ChatResponseParser implements ParserInterface
         private ?EventDispatcherInterface $eventDispatcher = null,
     ) {}
 
+    /**
+     * @throws LimitExceededException
+     * @throws RateLimitException
+     * @throws TimeoutException
+     */
     public function parse(ResponseStreamContract $stream, ?StreamChunkCallbackInterface $callback = null): Response
     {
         $callback ??= static fn(?string $chunk, bool $stop, ?string $finishReason = null) => null;
@@ -112,6 +120,9 @@ final readonly class ChatResponseParser implements ParserInterface
                 tools: \array_values($toolCalls),
                 finishReason: $finishReason->value,
             ),
+            $finishReason === FinishReason::Length => throw new LimitExceededException(),
+            $finishReason === FinishReason::Timeout => throw new TimeoutException(),
+            $finishReason === FinishReason::Limit => throw new RateLimitException(),
         };
     }
 }

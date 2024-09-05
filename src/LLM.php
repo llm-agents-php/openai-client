@@ -12,6 +12,9 @@ use LLM\Agents\LLM\Prompt\Chat\PromptInterface as ChatPromptInterface;
 use LLM\Agents\LLM\Prompt\PromptInterface;
 use LLM\Agents\LLM\Prompt\Tool;
 use LLM\Agents\LLM\Response\Response;
+use LLM\Agents\OpenAI\Client\Exception\LimitExceededException;
+use LLM\Agents\OpenAI\Client\Exception\RateLimitException;
+use LLM\Agents\OpenAI\Client\Exception\TimeoutException;
 use OpenAI\Contracts\ClientContract;
 
 final class LLM implements LLMInterface
@@ -77,7 +80,17 @@ final class LLM implements LLMInterface
             ->chat()
             ->createStreamed($request);
 
-        return $this->streamParser->parse($stream, $callback);
+        try {
+            return $this->streamParser->parse($stream, $callback);
+        } catch (LimitExceededException) {
+            throw new \LLM\Agents\LLM\Exception\LimitExceededException(
+                currentLimit: $request['max_tokens'],
+            );
+        } catch (RateLimitException) {
+            throw new \LLM\Agents\LLM\Exception\RateLimitException();
+        } catch (TimeoutException) {
+            throw new \LLM\Agents\LLM\Exception\TimeoutException();
+        }
     }
 
     protected function buildOptions(OptionsInterface $options): array

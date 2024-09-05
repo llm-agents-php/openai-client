@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace LLM\Agents\OpenAI\Client;
 
+use LLM\Agents\OpenAI\Client\Exception\LimitExceededException;
+use LLM\Agents\OpenAI\Client\Exception\RateLimitException;
+use LLM\Agents\OpenAI\Client\Exception\TimeoutException;
 use LLM\Agents\OpenAI\Client\Parsers\ParserInterface;
 use LLM\Agents\LLM\Exception\LLMException;
 use LLM\Agents\LLM\Response\Response;
@@ -19,6 +22,11 @@ final class StreamResponseParser
         $this->parsers[$type] = $parser;
     }
 
+    /**
+     * @throws LimitExceededException
+     * @throws RateLimitException
+     * @throws TimeoutException
+     */
     public function parse(StreamResponse $stream, ?StreamChunkCallbackInterface $callback = null): Response
     {
         $this->validateStreamResponse($stream);

@@ -5,7 +5,7 @@
   "require": {
     "php": "^8.3",
     "openai-php/client": "^0.10.1",
-    "llm-agents/agents": "dev-feature/embeddings",
+    "llm-agents/agents": "dev-feature/embeddings as 1.4",
     "guzzlehttp/guzzle": "^7.0"
   },
   "require-dev": {

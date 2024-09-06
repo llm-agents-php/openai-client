@@ -13,6 +13,21 @@ readonly class Options implements OptionsInterface
         private array $options = [],
     ) {}
 
+    public function withModel(OpenAIModel $model): static
+    {
+        return $this->with(Option::Model, $model->value);
+    }
+
+    public function withTemperature(float $temperature): static
+    {
+        return $this->with(Option::Temperature, $temperature);
+    }
+
+    public function withMaxTokens(int $maxTokens): static
+    {
+        return $this->with(Option::MaxTokens, $maxTokens);
+    }
+
     public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->options);

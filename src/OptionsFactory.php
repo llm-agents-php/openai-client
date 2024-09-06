@@ -9,8 +9,8 @@ use LLM\Agents\LLM\OptionsInterface;
 
 final class OptionsFactory implements OptionsFactoryInterface
 {
-    public function create(): OptionsInterface
+    public function create(array $options = []): OptionsInterface
     {
-        return new Options();
+        return new Options($options);
     }
 }

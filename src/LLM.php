@@ -61,12 +61,16 @@ final class LLM implements LLMInterface
         }
 
         if ($options->has(Option::Tools)) {
-            $request['tools'] = \array_values(
+            $tools = \array_values(
                 \array_map(
                     fn(Tool $tool): array => $this->messageMapper->map($tool),
                     $options->get(Option::Tools),
                 ),
             );
+
+            if ($tools !== []) {
+                $request['tools'] = $tools;
+            }
         }
 
         $callback = null;

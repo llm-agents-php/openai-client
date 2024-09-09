@@ -21,5 +21,6 @@ enum Option: string
 
     // Application options
     case Tools = 'tools';
+    case ToolChoice = 'tool_choice';
     case StreamChunkCallback = 'stream_chunk_callback';
 }

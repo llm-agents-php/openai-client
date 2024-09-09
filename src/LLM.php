@@ -15,6 +15,7 @@ use LLM\Agents\LLM\Response\Response;
 use LLM\Agents\OpenAI\Client\Exception\LimitExceededException;
 use LLM\Agents\OpenAI\Client\Exception\RateLimitException;
 use LLM\Agents\OpenAI\Client\Exception\TimeoutException;
+use LLM\Agents\Tool\ToolChoice;
 use OpenAI\Contracts\ClientContract;
 
 final class LLM implements LLMInterface
@@ -61,16 +62,7 @@ final class LLM implements LLMInterface
         }
 
         if ($options->has(Option::Tools)) {
-            $tools = \array_values(
-                \array_map(
-                    fn(Tool $tool): array => $this->messageMapper->map($tool),
-                    $options->get(Option::Tools),
-                ),
-            );
-
-            if ($tools !== []) {
-                $request['tools'] = $tools;
-            }
+            $request = $this->configureTools($options, $request);
         }
 
         $callback = null;
@@ -88,7 +80,7 @@ final class LLM implements LLMInterface
             return $this->streamParser->parse($stream, $callback);
         } catch (LimitExceededException) {
             throw new \LLM\Agents\LLM\Exception\LimitExceededException(
-                currentLimit: $request['max_tokens'],
+                currentLimit: $request[Option::MaxTokens->value],
             );
         } catch (RateLimitException) {
             throw new \LLM\Agents\LLM\Exception\RateLimitException();
@@ -114,5 +106,38 @@ final class LLM implements LLMInterface
 
         // filter out null options
         return \array_filter($result, static fn($value): bool => $value !== null);
+    }
+
+    protected function configureTools(Options $options, array $request): array
+    {
+        $tools = \array_values(
+            \array_map(
+                fn(Tool $tool): array => $this->messageMapper->map($tool),
+                $options->get(Option::Tools),
+            ),
+        );
+
+        if ($tools === []) {
+            return $request;
+        }
+
+        $request['tools'] = $tools;
+
+        $choice = $options->get(Option::ToolChoice->value);
+        if ($choice instanceof ToolChoice) {
+            $request['tool_choice'] = match (true) {
+                $choice->isAuto() => 'auto',
+                $choice->isAny() => 'required',
+                $choice->isNone() => 'none',
+                $choice->isSpecific() => [
+                    'type' => 'function',
+                    'function' => [
+                        'name' => $choice->toolName,
+                    ],
+                ],
+            };
+        }
+
+        return $request;
     }
 }

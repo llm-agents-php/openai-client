@@ -61,13 +61,13 @@ final class LLM implements LLMInterface
             $request['messages'][] = $this->messageMapper->map($message);
         }
 
-        if ($options->has(Option::Tools)) {
+        if ($options->has(Option::Tools->value)) {
             $request = $this->configureTools($options, $request);
         }
 
         $callback = null;
-        if ($options->has(Option::StreamChunkCallback)) {
-            $callback = $options->get(Option::StreamChunkCallback);
+        if ($options->has(Option::StreamChunkCallback->value)) {
+            $callback = $options->get(Option::StreamChunkCallback->value);
             \assert($callback instanceof StreamChunkCallbackInterface);
         }
 
@@ -108,12 +108,12 @@ final class LLM implements LLMInterface
         return \array_filter($result, static fn($value): bool => $value !== null);
     }
 
-    protected function configureTools(Options $options, array $request): array
+    protected function configureTools(OptionsInterface $options, array $request): array
     {
         $tools = \array_values(
             \array_map(
                 fn(Tool $tool): array => $this->messageMapper->map($tool),
-                $options->get(Option::Tools),
+                $options->get(Option::Tools->value),
             ),
         );
 

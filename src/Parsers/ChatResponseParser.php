@@ -9,7 +9,6 @@ use LLM\Agents\OpenAI\Client\Exception\LimitExceededException;
 use LLM\Agents\OpenAI\Client\Exception\RateLimitException;
 use LLM\Agents\OpenAI\Client\Exception\TimeoutException;
 use LLM\Agents\OpenAI\Client\StreamChunkCallbackInterface;
-use LLM\Agents\LLM\Response\FinishReason;
 use LLM\Agents\LLM\Response\Response;
 use LLM\Agents\LLM\Response\StreamChatResponse;
 use LLM\Agents\LLM\Response\ToolCall;

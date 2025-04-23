@@ -20,7 +20,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "LLM\\Tests\\": "tests/src"
+      "LLM\\Tests\\": "tests/"
     }
   },
   "config": {
